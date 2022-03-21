@@ -4,22 +4,20 @@ import os
 
 import uvicorn
 from fastapi import FastAPI , Request,  Response
+import requests
 
 app = FastAPI(title="Backend Assessment")
 
 
-posts = [
-    {"id": 1 , "author": "moi" , "authorId": 1  , "likes":20 , "popularity": 45, "reads": 100 , "tags" :["tech" , "santé"]} ,
-    {"id":2 , "author": "toi","authorId": 2 , "likes":20 , "popularity": 45, "reads": 100 ,"tags" :["tech" , "football"]},
-    {"id":3 , "author": "toi","authorId": 3  , "likes":20 , "popularity": 45, "reads": 100 , "tags" :["tech" , "basketball"]},
-    {"id":4 , "author": "toi","authorId": 4  , "likes":20 , "popularity": 45, "reads": 100 , "tags" :["tech" , "automobile"]},
-    {"id":5 , "author": "toi","authorId": 5  , "likes":20 , "popularity": 45, "reads": 100 , "tags" :["tech" , "Space"]}
+url = "https://api.hatchways.io/assessment/blog/posts?tag=tech"
 
-]
-    
 
-@app.get('/api/get_posts')
-def get_posts(request:Request ):
+app = FastAPI(title="Backend Assessment")
+
+@app.get('/api/get_Posts')
+def get_Posts(request:Request ):
+    Posts = requests.get(url)
+    posts = Posts.json()
     return posts
 
 
