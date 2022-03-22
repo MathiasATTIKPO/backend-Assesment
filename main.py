@@ -1,13 +1,8 @@
 from asyncio.windows_events import NULL
-from calendar import c
-import os
-from urllib import response
-
-
 import uvicorn
-from fastapi import FastAPI , Request,  Response 
+from fastapi import FastAPI , Request,Form,  Response 
 import requests
-import httpx 
+import httpx
 
 url = "https://api.hatchways.io/assessment/blog/posts?tag=tech"
 
@@ -36,7 +31,7 @@ base_url1 = "https://api.hatchways.io/assessment/blog/posts?tag=tech"
 
 
 @app.get('/api/posts')
-def post(  tags , sortBy , direction , response:Response  ) :
+def post( response:Response , tags , sortBy , direction) :
     cmd1 = httpx.get(base_url1)
   
     posts = (cmd1.json().get('posts'))
