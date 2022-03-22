@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from calendar import c
 import os
 from urllib import response
 
@@ -6,6 +7,7 @@ from urllib import response
 import uvicorn
 from fastapi import FastAPI , Request,  Response 
 import requests
+import httpx 
 
 url = "https://api.hatchways.io/assessment/blog/posts?tag=tech"
 
@@ -29,13 +31,20 @@ def index(request:Request , response:Response):
     else:
         return {"success": False}
 
+
+base_url1 = "https://api.hatchways.io/assessment/blog/posts?tag=tech"
+
+
 @app.get('/api/posts')
 def post(  tags , sortBy , direction , response:Response  ) :
-    Posts = requests.get(url)
-    posts = Posts.json()
+    cmd1 = httpx.get(base_url1)
+  
+    posts = (cmd1.json().get('posts'))
+    print(posts)
+
     if direction == "ASC" or direction == "asc":
         if sortBy == "id":
-            post_find = [post for post in posts if  tags.lower() in post["tags"].json()]
+            post_find = [post for post in posts if  tags.lower() in post["tags"]]
             post_find.sort(key=lambda  x: x["id"] , reverse=True)
 
             if not post_find:
@@ -44,7 +53,7 @@ def post(  tags , sortBy , direction , response:Response  ) :
             else:return post_find if len(post_find) >1 else post_find[0] 
         
         elif sortBy =="likes":
-            post_find = [post for post in posts if  tags.lower() in post[2]]
+            post_find = [post for post in posts if  tags.lower() in post["tags"]]
             post_find.sort(key=lambda  x: x["likes"] , reverse=True)
 
             if not post_find:
@@ -53,7 +62,7 @@ def post(  tags , sortBy , direction , response:Response  ) :
             else:return post_find if len(post_find) >1 else post_find[0]
         
         elif sortBy =="reads":
-            post_find = [post for post in posts if  tags.lower() in post[2]]
+            post_find = [post for post in posts if  tags.lower() in post["tags"]]
             post_find.sort(key=lambda  x: x["reads"] , reverse=True)
 
             if not post_find:
@@ -62,7 +71,7 @@ def post(  tags , sortBy , direction , response:Response  ) :
             else:return post_find if len(post_find) >1 else post_find[0]
 
         elif sortBy =="popularity":
-            post_find = [post for post in posts if  tags.lower() in post[2]]
+            post_find = [post for post in posts if  tags.lower() in post["tags"]]
             post_find.sort(key=lambda  x: x["popularity"] , reverse=True)
 
             if not post_find:
@@ -73,8 +82,8 @@ def post(  tags , sortBy , direction , response:Response  ) :
 
     elif direction == "DESC" or direction == "desc":
             if sortBy == "id":
-                post_find = [post for post in posts if  tags.lower() in post[2]]
-                post_find.sort(key=lambda  x: x["id"] , reverse=True)
+                post_find = [post for post in posts if  tags.lower() in post["tags"]]
+                post_find.sort(key=lambda  x: x["id"] , reverse=False)
 
                 if not post_find:
                     response.status_code=404
@@ -83,8 +92,8 @@ def post(  tags , sortBy , direction , response:Response  ) :
 
             elif sortBy =="likes":
             
-                post_find = [post for post in posts if  tags.lower() in post[2]]
-                post_find.sort(key=lambda  x: x["likes"] , reverse=True)
+                post_find = [post for post in posts if  tags.lower() in post["tags"]]
+                post_find.sort(key=lambda  x: x["likes"] , reverse=False)
 
                 if not post_find:
                     response.status_code=404
@@ -92,8 +101,8 @@ def post(  tags , sortBy , direction , response:Response  ) :
                 else:return post_find if len(post_find) >1 else post_find[0]
         
             elif sortBy =="reads":
-                post_find = [post for post in posts if  tags.lower() in post[2]]
-                post_find.sort(key=lambda  x: x["reads"] , reverse=True)
+                post_find = [post for post in posts if  tags.lower() in post["tags"]]
+                post_find.sort(key=lambda  x: x["reads"] , reverse=False)
 
                 if not post_find:
                     response.status_code=404
@@ -101,8 +110,8 @@ def post(  tags , sortBy , direction , response:Response  ) :
                 else:return post_find if len(post_find) >1 else post_find[0]
 
             elif sortBy =="popularity":
-                post_find = [post for post in posts if  tags.lower() in post[2]]
-                post_find.sort(key=lambda  x: x["popularity"] , reverse=True)
+                post_find = [post for post in posts if  tags.lower() in post["tags"]]
+                post_find.sort(key=lambda  x: x["popularity"] , reverse=False)
 
                 if not post_find:
                     response.status_code=404
